@@ -99,7 +99,7 @@ const index = {
                 inline_keyboard: [
                     [
                         {
-                            text: 'play rps',
+                            text: 'click here to bet',
                             callback_data: 'bet', // Unique identifier for the button
                         },
                     ],
