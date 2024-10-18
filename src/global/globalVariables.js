@@ -1,5 +1,3 @@
-const { config } = require("dotenv");
-
 const globalVariables = {
     games:[
         {
