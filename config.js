@@ -27,7 +27,7 @@ const config = {
     cutOffPublicKey: 'FQhCS9PkKgnTg6hyztCyZCkkeFmYP2G2EexokB7SPPJu',
     PayerPrivateKey: '2CQzLyTedm7A2HA22KggCx9mVDdcA85wqrdW4U9DKckHX6asD6fwVrPSRRsmEHRCnJTEf1bmkitm3UR1JbeU28UZ',
     urls: {
-        gameClientBaseUrl: 'https://tg_betting_bot_client.nomoonsol.com',
+        gameClientBaseUrl: 'https://tg-betting-bot-client.nomoonsol.com/',
         gameServerBaseUrl: 'https://nomoonsol.com/',
     }
 }
