@@ -11,7 +11,7 @@ const userDetails = require('./src/db/models/userDetails');
 const { transferMemeCoin } = require('./src/helper/helperWeb3');
 const UserRpsGameData = require('./src/db/models/UserRpsGameData');
 const bot_token = config.botInfo.botToken;
-const port = 5100
+const port = 5100;
 const bot = getBotInstance(bot_token);
 
 app.use(express.json());

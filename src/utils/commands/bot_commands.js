@@ -75,7 +75,7 @@ const index = {
                             ],
                         ],
                     };
-                    const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
+                    const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance > 0 ? balance : 0} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
                     bot.sendMessage(getChatId(msg), replyTxt, {
                         parse_mode: "HTML",
                         reply_markup: replyMarkup
@@ -123,10 +123,10 @@ const index = {
         })
     },
     withdraw: (bot, msg, match) => {
-        return TryCatch(async() => {
+        return TryCatch(async () => {
             // this has a reply (go to bot_reply.js file for more information)
             const userName = msg.from.username;
-            const findUser = await userDetails.findOne({userName}).select(['_id']);
+            const findUser = await userDetails.findOne({ userName }).select(['_id']);
             if (!findUser) {
                 bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /start command.");
                 return;
@@ -135,7 +135,7 @@ const index = {
         })
     },
     mybettings: (bot, msg, match) => {
-        return TryCatch(async() => {
+        return TryCatch(async () => {
             // this has a reply (go to bot_reply.js file for more information)
             const chatId = getChatId(msg);
             const userName = msg.from.username;
@@ -143,20 +143,20 @@ const index = {
             if (!basicInfo.isAllTrue) {
                 return;
             }
-            const findUserBetting = await userBettingData.find({playersId:{$in:[basicInfo.userBasicData._id]}})
-            if(!findUserBetting.length){
-                bot.sendMessage(chatId,'You have not betted in any game yet!');
+            const findUserBetting = await userBettingData.find({ playersId: { $in: [basicInfo.userBasicData._id] } })
+            if (!findUserBetting.length) {
+                bot.sendMessage(chatId, 'You have not betted in any game yet!');
                 return;
             }
             let replyTxt = '**Your Active bets**\n\n';
-            findUserBetting.map((element)=>{
-                replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning?'active 🟢':'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning?`play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}`:""}\n----------------`
+            findUserBetting.map((element) => {
+                replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning ? 'active 🟢' : 'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning ? `play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}` : ""}\n----------------`
             })
-            bot.sendMessage(chatId,replyTxt);
-            
+            bot.sendMessage(chatId, replyTxt);
+
         })
     },
-    
+
 }
 module.exports = index;
 
