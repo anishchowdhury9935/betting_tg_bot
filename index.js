@@ -49,7 +49,9 @@ app.post('/savewinnertransaction', (req, res) => {
     }, res)
 })
 
-
+app.get('/',(req,res)=>{
+    res.status(200).json({ msg:'Success ✅'})
+})
 
 app.listen(port, () => {
     console.log(`chat app backend listening on port: http://localhost:${port}`)
