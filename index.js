@@ -11,7 +11,7 @@ const userDetails = require('./src/db/models/userDetails');
 const { transferMemeCoin } = require('./src/helper/helperWeb3');
 const UserRpsGameData = require('./src/db/models/UserRpsGameData');
 const bot_token = config.botInfo.botToken;
-const port = 5100;
+const port = config.port;
 const bot = getBotInstance(bot_token);
 
 app.use(express.json());
@@ -23,10 +23,11 @@ function calculatePercentage(percentage, value) {
     return (percentage / 100) * value;
 }
 
- 
+
 app.post('/savewinnertransaction', (req, res) => {
     return TryCatch(async () => {
         const { winnerId, bettingId } = req.body;
+        console.log(winnerId, bettingId)
         const findBet = await userBettingData.findById({ _id: bettingId });
         const findWinner = await userDetails.findById({ _id: winnerId })
         const findLoserId = findBet.playersId.filter((val) => {
@@ -40,19 +41,21 @@ app.post('/savewinnertransaction', (req, res) => {
         const amountToSentInWinnerWallet = betAmount - cutOffAmount;
         const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
         const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);
+        console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
         if (transferMemeCoinToWinner && transferMemeCoinOfCutOff) {
             const deleteBet = await userBettingData.deleteOne({ _id: bettingId });
-        }else{
-            const deleteBetData = await UserRpsGameData.deleteOne({bettingId});
+            const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
+        } else {
+            const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
         }
         return res.status(200).json({ msg: '' });
     }, res)
 })
 
-app.get('/',(req,res)=>{
-    res.status(200).json({ msg:'Success ✅'})
+app.get('/', (req, res) => {
+    res.status(200).json({ msg: 'Success ✅' })
 })
 
 app.listen(port, () => {
-    console.log(`chat app backend listening on port: http://localhost:${port}`)
+    console.log(`server listening on port: http://localhost:${port}`)
 }) 

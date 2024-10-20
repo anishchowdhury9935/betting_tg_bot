@@ -66,7 +66,7 @@ const index = {
                     ],
                 ],
             };
-            console.log(`${config.urls.gameClientBaseUrl}/rps/${findBetDetails._id}/${type}/${findBetDetails.nameOfBet}/${basicInfo.userBasicData._id}`)
+            // console.log(`http:/localhost:5173/rps/${findBetDetails._id}/${type}/${findBetDetails.nameOfBet}/${basicInfo.userBasicData._id}`)
             bot.sendMessage(chatId, `Play ${findBetDetails.nameOfBet} by clicking on button below:`, { reply_markup: replyMarkup });
         })
     }
