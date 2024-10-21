@@ -57,12 +57,13 @@ const index = {
     wallet: (bot, msg, match) => {
         TryCatch(async () => {
             const userName = msg.from.username;
+            const replyToMessageId = msg.message_id;
             const getUserWallet = await userDetails.findOne({ userName }).select(['walletAddress', '-_id']);
             if (getUserWallet) {
                 const { publicKey } = getUserWallet.walletAddress
                 // bot.sendMessage(getChatId(msg), "");
                 if (!hasTokenAccountForMint(publicKey)) {
-                    bot.sendMessage(getChatId(msg), `It mit take some time for first time to signin with ${config.memeCoinInfo.name}......`);
+                    bot.sendMessage(getChatId(msg), `It mit take some time for first time to signin with ${config.memeCoinInfo.name}......`,{reply_to_message_id: replyToMessageId});
                 }
                 try {
                     const { walletAddress, balance } = await getTokenBalanceAsBettingAmount(userName);
@@ -79,19 +80,21 @@ const index = {
                     const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance > 0 ? balance : 0} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
                     bot.sendMessage(getChatId(msg), replyTxt, {
                         parse_mode: "HTML",
-                        reply_markup: replyMarkup
+                        reply_markup: replyMarkup,
+                        reply_to_message_id: replyToMessageId
                     });
                     return;
                 } catch (error) {
-                    bot.sendMessage(getChatId(msg), "failed to make wallet ❌");
+                    bot.sendMessage(getChatId(msg), "failed to make wallet ❌",{reply_to_message_id: replyToMessageId});
                     throw new Error(error);
                 }
             }
-            bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /start command.");
+            bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /start command.",{reply_to_message_id: replyToMessageId});
         });
     },
     games: (bot, msg, match) => {
         return TryCatch(async () => {
+            const replyToMessageId = msg.message_id;
             let replyTxt = '🎰 All available Games 🎰\n\n';
             globalVariables.games.map(({ name, about }, index) => {
                 replyTxt += `no.${index + 1})\n\n${name}\nOverview:${about}\n\n`;
@@ -106,37 +109,41 @@ const index = {
                     ],
                 ],
             };
-            bot.sendMessage(getChatId(msg), replyTxt, { reply_markup: replyMarkup });
+            bot.sendMessage(getChatId(msg), replyTxt, { reply_markup: replyMarkup,reply_to_message_id: replyToMessageId });
             return;
         })
     },
     stats: (bot, msg, match) => {
         return TryCatch(async () => {
+            const replyToMessageId = msg.message_id;
             const replyTxt = `📊 Your Game Statistics 📊\n\n🏆 Games Won: ${0}\n❌ Games Lost: ${0}\n💰 Total Winnings: ${0} ${config.memeCoinInfo.name}\n\nKeep playing and good luck!\n`
-            bot.sendMessage(getChatId(msg), replyTxt);
+            bot.sendMessage(getChatId(msg), replyTxt,{reply_to_message_id: replyToMessageId});
         })
     },
     bet: (bot, msg, match) => {
         return TryCatch(() => {
+            const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
             // bot.sendMessage(getChatId(msg), `Please reply this message with the amount of ${config.memeCoinInfo.name} you want to bet\n\nbetting ranges to \n${config.bettingInfo.bettingAmount.min}-${config.bettingInfo.bettingAmount.max}${config.memeCoinInfo.name}`);
-            bot.sendMessage(getChatId(msg), "Please reply this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor");
+            bot.sendMessage(getChatId(msg), "Please reply this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor",{reply_to_message_id: replyToMessageId});
         })
     },
     withdraw: (bot, msg, match) => {
         return TryCatch(async () => {
+            const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
             const userName = msg.from.username;
             const findUser = await userDetails.findOne({ userName }).select(['_id']);
             if (!findUser) {
-                bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /start command.");
+                bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /start command.",{reply_to_message_id: replyToMessageId});
                 return;
             }
-            bot.sendMessage(getChatId(msg), "Please reply this message with the wallet address in which you want to withdraw.");
+            bot.sendMessage(getChatId(msg), "Please reply this message with the wallet address in which you want to withdraw.",{reply_to_message_id: replyToMessageId});
         })
     },
     mybettings: (bot, msg, match) => {
         return TryCatch(async () => {
+            const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
             const chatId = getChatId(msg);
             const userName = msg.from.username;
@@ -146,14 +153,14 @@ const index = {
             }
             const findUserBetting = await userBettingData.find({ playersId: { $in: [basicInfo.userBasicData._id] } })
             if (!findUserBetting.length) {
-                bot.sendMessage(chatId, 'You have not betted in any game yet!');
+                bot.sendMessage(chatId, 'You have not betted in any game yet!',{reply_to_message_id: replyToMessageId});
                 return;
             }
             let replyTxt = '**Your Active bets**\n\n';
             findUserBetting.map((element) => {
                 replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning ? 'active 🟢' : 'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning ? `play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}` : ""}\n----------------`
             })
-            bot.sendMessage(chatId, replyTxt);
+            bot.sendMessage(chatId, replyTxt,{reply_to_message_id: replyToMessageId});
 
         })
     },

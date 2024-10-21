@@ -9,6 +9,7 @@ const index = {
     join: (bot, msg, match, dataExtractedThroughLink) => {
         return TryCatch(async () => {
             const { bettingId, type } = dataExtractedThroughLink;
+            const replyToMessageId = msg.message_id;
             const chatId = getChatId(msg);
             const userName = msg.from.username;
             const basicInfo = await getWalletBasicInfoToProceed(userName, bot, msg);
@@ -17,29 +18,30 @@ const index = {
             }
             const findBetDetails = await userBettingData.findById({ _id: bettingId });
             if (!findBetDetails) {
-                bot.sendMessage(chatId, 'This room does not exist ❌');
+                bot.sendMessage(chatId, 'This room does not exist ❌',{reply_to_message_id: replyToMessageId});
                 return;
             }
             if (findBetDetails.playersId.length === 2) {
-                bot.sendMessage(chatId, 'This room is full 🧑‍🤝‍🧑');
+                bot.sendMessage(chatId, 'This room is full 🧑‍🤝‍🧑',{reply_to_message_id: replyToMessageId});
                 return;
             }
             const findUser = await userDetails.findOne({ userName });
             if (findBetDetails.playersId.includes(findUser._id)) {
-                bot.sendMessage(chatId, 'You have already joined this room');
+                bot.sendMessage(chatId, 'You have already joined this room',{reply_to_message_id: replyToMessageId});
                 return;
             }
             const { balance } = await getTokenBalanceAsBettingAmount(userName);
             if (balance < findBetDetails.bettingAmount) {
-                bot.sendMessage(chatId, `Your balance is only :${balance}\n\n And your betting amount is :${findBetDetails.bettingAmount} \n\n please add some ${config.memeCoinInfo.name} by using:\n /wallet `);
+                bot.sendMessage(chatId, `Your balance is only :${balance}\n\n And your betting amount is :${findBetDetails.bettingAmount} \n\n please add some ${config.memeCoinInfo.name} by using:\n /wallet `,{reply_to_message_id: replyToMessageId});
                 return;
             }
             const addUserToBetRoom = await userBettingData.updateOne({ _id: bettingId }, { playersId: [...findBetDetails.playersId, findUser._id] })
-            bot.sendMessage(chatId, `@${userName} have betted ${findBetDetails.bettingAmount} ${config.memeCoinInfo.name} on ${findBetDetails.nameOfBet}\n\nClick on the link below to play the game:\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${bettingId}_type-${'play'}_game-${findUser.bettingInfo.nameOfBet}\n\n you can use /mybettings to show the betting status`);
+            bot.sendMessage(chatId, `@${userName} have betted ${findBetDetails.bettingAmount} ${config.memeCoinInfo.name} on ${findBetDetails.nameOfBet}\n\nClick on the link below to play the game:\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${bettingId}_type-${'play'}_game-${findUser.bettingInfo.nameOfBet}\n\n you can use /mybettings to show the betting status`,{reply_to_message_id: replyToMessageId});
         })
     },
     play: (bot, msg, match, dataExtractedThroughLink) => {
         return TryCatch(async () => {
+            const replyToMessageId = msg.message_id;
             const { bettingId, type } = dataExtractedThroughLink;
             const chatId = getChatId(msg);
             const userName = msg.from.username;
@@ -49,11 +51,11 @@ const index = {
             }
             const findBetDetails = await userBettingData.findById({ _id: bettingId });
             if (!findBetDetails) {
-                bot.sendMessage(chatId, 'This room does not exist ❌');
+                bot.sendMessage(chatId, 'This room does not exist ❌',{reply_to_message_id: replyToMessageId});
                 return;
             }
             if (!findBetDetails.playersId.includes(basicInfo.userBasicData._id)) {
-                bot.sendMessage(chatId, 'You are not a player of this game');
+                bot.sendMessage(chatId, 'You are not a player of this game',{reply_to_message_id: replyToMessageId});
                 return;
             }
             const replyMarkup = {
@@ -67,7 +69,7 @@ const index = {
                 ],
             };
             // console.log(`http:/localhost:5173/rps/${findBetDetails._id}/${type}/${findBetDetails.nameOfBet}/${basicInfo.userBasicData._id}`)
-            bot.sendMessage(chatId, `Play ${findBetDetails.nameOfBet} by clicking on button below:`, { reply_markup: replyMarkup });
+            bot.sendMessage(chatId, `Play ${findBetDetails.nameOfBet} by clicking on button below:`, { reply_markup: replyMarkup,reply_to_message_id: replyToMessageId });
         })
     }
 }
