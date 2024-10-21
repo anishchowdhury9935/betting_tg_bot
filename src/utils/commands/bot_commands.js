@@ -51,7 +51,7 @@ const index = {
                 ],
             };
             const reply = `Welcome to the ${config.botInfo.botName} Game Bot!\n\nRight now, we have one exciting game, but more are on the way soon!\n\nTap the 🎰 Available Games button below to explore all the games with detailed descriptions.\n\nYou can use the /commands command to see everything you can do here.\n\nA small portion of each pot goes toward community growth:\n\t• 0.5% will be burned,\n\t• 1% goes into our marketing fund,\n\t• Another 0.5% is reserved for giveaways.\n\nYou can place bets ranging from 10 to 100 ${config.memeCoinInfo.name}, and the winner takes the full pot (after fees).\n\nEvery player gets their own wallet to manage their ${config.memeCoinInfo.name}.\n\nIf you have enough in your wallet, you can jump into games instantly, no extra transaction required.\n\nTo withdraw your ${config.memeCoinInfo.name}, just hit the 💰 Wallet button below.\n\nDive in and have a great time! 🕹`;
-            bot.sendMessage(getChatId(msg), reply, { reply_markup: replyMarkup });
+            bot.sendMessage(getChatId(msg), reply, { reply_markup: replyMarkup,reply_to_message_id: replyToMessageId });
         });
     },
     wallet: (bot, msg, match) => {
