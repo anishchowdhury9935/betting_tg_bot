@@ -48,7 +48,7 @@ app.post('/savewinnertransaction', (req, res) => {
         console.log("Amount to Send to Winner:", amountToSentInWinnerWallet);
         console.log("Winner Wallet Public Key:", winnerWalletPublicKey);
         console.log("Loser Wallet Private Key:", loserWalletPrivateKey);
-        if (transferMemeCoinToWinner && transferMemeCoinOfCutOff) {
+        if (transferMemeCoinToWinner || transferMemeCoinOfCutOff) {
             const deleteBet = await userBettingData.deleteOne({ _id: bettingId });
             const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
         } else {

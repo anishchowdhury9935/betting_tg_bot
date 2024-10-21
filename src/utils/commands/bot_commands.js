@@ -14,8 +14,9 @@ const index = {
     start: async (bot, msg, match) => {
         TryCatch(async () => {
             const userName = msg.from.username;
+            const replyToMessageId = msg.message_id;
             if (!userName) {
-                bot.sendMessage(getChatId(msg), "you didn't have you username please make it first from your settings tab 👍🏻")
+                bot.sendMessage(getChatId(msg), "you didn't have you username please make it first from your settings tab 👍🏻",{reply_to_message_id: replyToMessageId})
                 return;
             }
             const findUser = await userDetails.findOne({ userName }).select(['_id']);
