@@ -27,7 +27,7 @@ function calculatePercentage(percentage, value) {
 app.post('/savewinnertransaction', (req, res) => {
     return TryCatch(async () => {
         const { winnerId, bettingId } = req.body;
-        console.log(winnerId, bettingId)
+        // console.log(winnerId, bettingId)
         const findBet = await userBettingData.findById({ _id: bettingId });
         const findWinner = await userDetails.findById({ _id: winnerId })
         const findLoserId = findBet.playersId.filter((val) => {
@@ -42,6 +42,7 @@ app.post('/savewinnertransaction', (req, res) => {
         const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
         const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);
         console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
+        // console.log(loserWalletPrivateKey, winnerWalletPublicKey,'amountToSentInWinnerWallet:',amountToSentInWinnerWallet)
         if (transferMemeCoinToWinner && transferMemeCoinOfCutOff) {
             const deleteBet = await userBettingData.deleteOne({ _id: bettingId });
             const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
