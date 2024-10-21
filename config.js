@@ -17,7 +17,7 @@ const config = {
 
     }, bettingInfo: {
         bettingAmount: {
-            min: 1,
+            min: 10,
             max: 1000
         }
     },
