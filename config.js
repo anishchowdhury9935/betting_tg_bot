@@ -3,7 +3,7 @@ const config = {
     botInfo: {
         botToken: "7677063351:AAFAvug-SNT8FSyb3zzmh0uZDVrSaTntmdc",//**
         botTgUserName: 'nomoGamblebot',
-        botName: "Nomo Gamble bot",//**
+        botName: "Nomo Game bot",//**
     },
     db: {
         // In development phase use 'mongoHostUrlDev' (you should have mongodb installed in your machine) in production phase use 'mongoHostUrlMain'
