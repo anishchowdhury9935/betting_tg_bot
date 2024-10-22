@@ -83,7 +83,7 @@ const bot_reply = [
                 }
                 const findUserWalletAddress = await userDetails.findOne({ userName }).select(['walletAddress', '-_id']);
                 if (findUserWalletAddress === null) {
-                    bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /start command.", { reply_to_message_id: replyToMessageId });
+                    bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /create command.", { reply_to_message_id: replyToMessageId });
                     return;
                 }
                 const { walletAddress } = findUserWalletAddress

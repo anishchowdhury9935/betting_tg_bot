@@ -89,7 +89,7 @@ const index = {
                     throw new Error(error);
                 }
             }
-            bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /start command.",{reply_to_message_id: replyToMessageId});
+            bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /create command.",{reply_to_message_id: replyToMessageId});
         });
     },
     games: (bot, msg, match) => {
@@ -135,7 +135,7 @@ const index = {
             const userName = msg.from.username;
             const findUser = await userDetails.findOne({ userName }).select(['_id']);
             if (!findUser) {
-                bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /start command.",{reply_to_message_id: replyToMessageId});
+                bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /create command.",{reply_to_message_id: replyToMessageId});
                 return;
             }
             bot.sendMessage(getChatId(msg), "Please reply this message with the wallet address in which you want to withdraw.",{reply_to_message_id: replyToMessageId});

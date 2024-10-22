@@ -1,4 +1,4 @@
-const devModeOn = false;
+const devModeOn = true;
 const config = {
     botInfo: {
         botToken: "7677063351:AAFAvug-SNT8FSyb3zzmh0uZDVrSaTntmdc",//**
