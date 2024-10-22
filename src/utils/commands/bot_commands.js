@@ -11,7 +11,7 @@ const { createWalletAddress } = helperWeb3MainObj;
 
 
 const index = {
-    start: async (bot, msg, match) => {
+    create: async (bot, msg, match) => {
         TryCatch(async () => {
             const userName = msg.from.username;
             const replyToMessageId = msg.message_id;
