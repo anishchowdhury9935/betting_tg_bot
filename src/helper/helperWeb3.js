@@ -120,10 +120,9 @@ const helperWeb3MainObj = {
                 )
             );
             transaction.feePayer = feePayer.publicKey;
-            const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
-            const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+            const connectionForHash = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
+            const { blockhash, lastValidBlockHeight } = await connectionForHash.getLatestBlockhash();
             transaction.recentBlockhash = blockhash;
-
             const signature = await sendAndConfirmTransaction(connectionFast, transaction, [fromWallet, feePayer], {
                 commitment: 'finalized',
                 preflightCommitment: 'finalized'
