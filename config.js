@@ -22,7 +22,7 @@ const config = {
         }
     },
     // rpcNetwork: 'https://solana-api.instantnodes.io/token-FkplVBNzBHxexjaAnPajqTAvRuZZWq0o',
-    rpcNetwork: 'wss://go.getblock.io/e6d7ee70d7f24f42ad2f4028c4c8f8d6',
+    rpcNetwork: 'https://go.getblock.io/751078095c3e42d3b5cd8fb932171655',
     PayerPrivateKey: devModeOn ? '5xuGQCytpr8uuNjc8Z46RUxKfDXomh2PMR6z7wnpJ5RTXvoLPUXwN88hEMdbVg1yf3pn5QQJjukKqmjyzLgPY3u' : '2CQzLyTedm7A2HA22KggCx9mVDdcA85wqrdW4U9DKckHX6asD6fwVrPSRRsmEHRCnJTEf1bmkitm3UR1JbeU28UZ',
     cutOffPublicKey: devModeOn ? 'HPKFp6tWjCMmoH6AR52KJUmECgmRxrtyW9Fy8u7yUJcC' : 'FQhCS9PkKgnTg6hyztCyZCkkeFmYP2G2EexokB7SPPJu',
     // PayerPrivateKey: '2CQzLyTedm7A2HA22KggCx9mVDdcA85wqrdW4U9DKckHX6asD6fwVrPSRRsmEHRCnJTEf1bmkitm3UR1JbeU28UZ',
