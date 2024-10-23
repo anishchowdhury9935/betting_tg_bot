@@ -3,7 +3,6 @@ const userRpsGameDataSchema = new mongoose.Schema({
     bettingId:{
         type:String,
         required:true,
-        unique:true
     },
     roundNumber:{
         type:Number,
