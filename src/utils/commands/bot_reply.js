@@ -2,6 +2,7 @@ const config = require("../../../config");
 const userBettingData = require("../../db/models/userBettingData");
 const userDetails = require("../../db/models/userDetails");
 const userTransactionData = require("../../db/models/userTransactionData");
+const UserRpsGameData = require("../../db/models/UserRpsGameData");
 const globalVariables = require("../../global/globalVariables");
 const { TryCatch, getChatId, isNumeric, getTokenBalanceAsBettingAmount, isValidPublicKey, hasTokenAccountForMint, getWalletBasicInfoToProceed } = require("../../helper/helperMain");
 const { transferMemeCoin } = require("../../helper/helperWeb3");
@@ -36,6 +37,14 @@ const bot_reply = [
                     return;
                 }
                 const createNewBet = await userBettingData.create({ bettingAmount: Number(msgTxt), playersId: [findUser._id], nameOfBet: findUser.bettingInfo.nameOfBet });
+                const bettingId = createNewBet._id;
+                const findUserBettingData = await UserRpsGameData.findOne({ bettingId });
+                if (!findUserBettingData) {
+                    const newBet = await UserRpsGameData.create({ bettingId, playerRoundWin: [{ userId: findUser._id, winCount: 0 }] });
+                } else {
+                    const newArr = [...findUserBettingData.playerRoundWin, {userId:findUser._id,winCount:0}];
+                    const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
+                }
                 const deleteNameOfbetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
                 bot.sendMessage(getChatId(msg), `@${userName} has started a new bet on /${findUser.bettingInfo.nameOfBet} \n\n click on the link below to bet on it\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${createNewBet._id}_type-${'join'}_game-${findUser.bettingInfo.nameOfBet}`, { reply_to_message_id: replyToMessageId });
             })
