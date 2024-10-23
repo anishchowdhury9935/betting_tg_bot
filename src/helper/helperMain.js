@@ -15,6 +15,7 @@ const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
 * @returns {boolean} - Returns true if the wallet has a token account for the mint, otherwise false.
 */
 async function hasTokenAccountForMint(walletAddress) {
+    const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
     try {
         // Convert the wallet and mint addresses to PublicKey objects
         const ownerPublicKey = new PublicKey(walletAddress);
@@ -126,8 +127,8 @@ const index = {
             const obj = {
                 hasWallet: !!findUser,
                 isSignedWithMintOrToken: findHasToken,
-                isAllTrue:!!findUser && findHasToken,
-                userBasicData:findUser
+                isAllTrue: !!findUser && findHasToken,
+                userBasicData: findUser
             }
             obj.hasWallet ? '' : bot.sendMessage(msg.chat?.id || msg.message?.chat?.id, 'please make the wallet first by using /start command');
             obj.isSignedWithMintOrToken ? '' : bot.sendMessage(msg.chat?.id || msg.message?.chat?.id, `your wallet is not signed with ${config.memeCoinInfo.name} use /wallet command to sign it.`);
@@ -138,8 +139,8 @@ const index = {
         return {
             hasWallet: false,
             isSignedWithMintOrToken: false,
-            isAllTrue:false,
-            userBasicData:false
+            isAllTrue: false,
+            userBasicData: false
         };
     }
 }

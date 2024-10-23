@@ -120,6 +120,7 @@ const helperWeb3MainObj = {
                 )
             );
             transaction.feePayer = feePayer.publicKey;
+            const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
             const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
             transaction.recentBlockhash = blockhash;
 
