@@ -125,7 +125,7 @@ const index = {
             const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
             // bot.sendMessage(getChatId(msg), `Please reply this message with the amount of ${config.memeCoinInfo.name} you want to bet\n\nbetting ranges to \n${config.bettingInfo.bettingAmount.min}-${config.bettingInfo.bettingAmount.max}${config.memeCoinInfo.name}`);
-            bot.sendMessage(getChatId(msg), "Please reply this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor", { reply_to_message_id: replyToMessageId });
+            bot.sendMessage(getChatId(msg), "Please reply to this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor", { reply_to_message_id: replyToMessageId });
         })
     },
     withdraw: (bot, msg, match) => {
@@ -138,7 +138,7 @@ const index = {
                 bot.sendMessage(getChatId(msg), "You don't have any wallet. Please make it first by using the /create command.", { reply_to_message_id: replyToMessageId });
                 return;
             }
-            bot.sendMessage(getChatId(msg), "Please reply this message with the wallet address in which you want to withdraw.", { reply_to_message_id: replyToMessageId });
+            bot.sendMessage(getChatId(msg), "Please reply to this message with the wallet address in which you want to withdraw.", { reply_to_message_id: replyToMessageId });
         })
     },
     mybettings: (bot, msg, match) => {

@@ -75,7 +75,7 @@ const bot_reply = [
                     return;
                 }
                 const saveType = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: msgTxt } });
-                bot.sendMessage(chatId, `Please reply this message with the amount of ${config.memeCoinInfo.name} you want to bet in it`, { reply_to_message_id: replyToMessageId })
+                bot.sendMessage(chatId, `Please reply to this message with the amount of ${config.memeCoinInfo.name} you want to bet in it`, { reply_to_message_id: replyToMessageId })
             })
         }
     },
@@ -103,7 +103,7 @@ const bot_reply = [
                     return;
                 }
                 const findUserTransactionData = await userTransactionData.findOne({ userName });
-                bot.sendMessage(getChatId(msg), `please reply this message with amount of ${config.memeCoinInfo.name} you want to withdraw.`, { reply_to_message_id: replyToMessageId });
+                bot.sendMessage(getChatId(msg), `please reply to this message with amount of ${config.memeCoinInfo.name} you want to withdraw.`, { reply_to_message_id: replyToMessageId });
                 if (!findUserTransactionData) {
                     await userTransactionData.create({ userName, withdrawData: { publicKey: msgTxt } });
                     return;
