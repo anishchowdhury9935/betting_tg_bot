@@ -86,7 +86,7 @@ const index = {
                     return;
                 } catch (error) {
                     bot.sendMessage(getChatId(msg), "failed to make wallet ❌", { reply_to_message_id: replyToMessageId });
-                    throw new Error(error);
+                    // throw new Error(error);
                 }
             }
             bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /create command.", { reply_to_message_id: replyToMessageId });

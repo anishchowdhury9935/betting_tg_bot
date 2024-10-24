@@ -14,6 +14,7 @@ const index = {
             const chatId = getChatId(msg);
             const userName = msg.from.username;
             const basicInfo = await getWalletBasicInfoToProceed(userName, bot, msg);
+            console.log(msg);
             if (!basicInfo.isAllTrue) {
                 return;
             }
