@@ -8,7 +8,7 @@ const { TryCatch, getChatId, isNumeric, getTokenBalanceAsBettingAmount, isValidP
 const { transferMemeCoin } = require("../../helper/helperWeb3");
 const bot_reply = [
     {
-        repliedMsgTxt: `Please reply this message with the amount of ${config.memeCoinInfo.name} you want to bet in it`,
+        repliedMsgTxt: `Please reply to this message with the amount of ${config.memeCoinInfo.name} you want to bet in it`,
         func: (bot, msg) => {
             return TryCatch(async () => {
                 const replyToMessageId = msg.message_id;
@@ -51,7 +51,7 @@ const bot_reply = [
         }
     },
     {
-        repliedMsgTxt: `Please reply this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor`,
+        repliedMsgTxt: `Please reply to this message with the game in which you want to bet\n\n example:reply 'rps' to bet on rock paper scissor`,
         func: (bot, msg) => {
             return TryCatch(async () => {
                 const replyToMessageId = msg.message_id;
@@ -65,7 +65,7 @@ const bot_reply = [
                     return;
                 }
                 globalVariables.games.map(({ commandName }) => {
-                    if (commandName === msgTxt) {
+                    if (commandName === msgTxt.toString()) {
                         isCommandRight = true;
                     }
                 })
@@ -79,7 +79,7 @@ const bot_reply = [
         }
     },
     {
-        repliedMsgTxt: "Please reply this message with the wallet address in which you want to withdraw.",
+        repliedMsgTxt: "Please reply to this message with the wallet address in which you want to withdraw.",
         func: (bot, msg) => {
             return TryCatch(async () => {
                 const replyToMessageId = msg.message_id;
@@ -112,7 +112,7 @@ const bot_reply = [
         }
     },
     {
-        repliedMsgTxt: `please reply this message with amount of ${config.memeCoinInfo.name} you want to withdraw.`,
+        repliedMsgTxt: `please reply to this message with amount of ${config.memeCoinInfo.name} you want to withdraw.`,
         func: (bot, msg) => {
             return TryCatch(async () => {
                 const replyToMessageId = msg.message_id;
