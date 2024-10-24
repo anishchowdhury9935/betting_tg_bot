@@ -54,7 +54,7 @@ const index = {
             bot.sendMessage(getChatId(msg), reply, { reply_markup: replyMarkup, reply_to_message_id: replyToMessageId });
         });
     },
-    wallet: (bot, msg, match,_specific_chatId) => {
+    wallet: (bot, msg, match) => {
         TryCatch(async () => {
             const userName = msg.from.username;
             const replyToMessageId = msg.message_id;
@@ -78,8 +78,7 @@ const index = {
                         ],
                     };
                     const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance > 0 ? balance : 0} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
-                    const chatId = _specific_chatId ? _specific_chatId : getChatId(msg);
-                    bot.sendMessage(_specific_chatId, replyTxt, {
+                    bot.sendMessage(getChatId(msg), replyTxt, {
                         parse_mode: "HTML",
                         reply_markup: replyMarkup,
                         reply_to_message_id: replyToMessageId
@@ -142,11 +141,11 @@ const index = {
             bot.sendMessage(getChatId(msg), "Please reply to this message with the wallet address in which you want to withdraw.", { reply_to_message_id: replyToMessageId });
         })
     },
-    mybettings: (bot, msg, match) => {
+    mybettings: (bot, msg, match, _specific_chatId) => {
         return TryCatch(async () => {
             const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
-            const chatId = getChatId(msg);
+            const chatId = _specific_chatId ? _specific_chatId : getChatId(msg);
             const userName = msg.from.username;
             const basicInfo = await getWalletBasicInfoToProceed(userName, bot, msg);
             if (!basicInfo.isAllTrue) {
