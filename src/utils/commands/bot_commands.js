@@ -160,7 +160,7 @@ const index = {
             findUserBetting.map((element) => {
                 replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning ? 'active 🟢' : 'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning ? `play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}` : ""}\n----------------`
             })
-            console.log(chatId)
+            console.log(_specific_chatId)
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
         })
     },
