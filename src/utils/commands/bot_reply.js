@@ -47,9 +47,9 @@ const bot_reply = [
                     const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
                 }
                 const deleteNameOfBetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
-                bot.sendMessage(getChatId(msg), `@${userName} has started a new bet on /${findUser.bettingInfo.nameOfBet} \n\n click on the link below to bet on it\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${createNewBet._id}_type-${'join'}_game-${findUser.bettingInfo.nameOfBet}`, { reply_to_message_id: replyToMessageId });
-                console.log(msg.from.id,"sdfsf")
                 bot_commands.mybettings(bot,msg,false,msg.from.id);
+                console.log(msg.from.id,"heee")
+                bot.sendMessage(getChatId(msg), `@${userName} has started a new bet on /${findUser.bettingInfo.nameOfBet} \n\n click on the link below to bet on it\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${createNewBet._id}_type-${'join'}_game-${findUser.bettingInfo.nameOfBet}`, { reply_to_message_id: replyToMessageId });
             })
         }
     },
