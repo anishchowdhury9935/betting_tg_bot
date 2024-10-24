@@ -48,7 +48,7 @@ const bot_reply = [
                 }
                 const deleteNameOfBetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
                 bot.sendMessage(getChatId(msg), `@${userName} has started a new bet on /${findUser.bettingInfo.nameOfBet} \n\n click on the link below to bet on it\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${createNewBet._id}_type-${'join'}_game-${findUser.bettingInfo.nameOfBet}`, { reply_to_message_id: replyToMessageId });
-                bot_commands.mybettings(bot,msg,false,msg.from.username);
+                bot_commands.mybettings(bot,msg,false,msg.from.id);
             })
         }
     },
