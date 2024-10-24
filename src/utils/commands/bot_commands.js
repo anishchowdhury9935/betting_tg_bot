@@ -141,11 +141,11 @@ const index = {
             bot.sendMessage(getChatId(msg), "Please reply to this message with the wallet address in which you want to withdraw.", { reply_to_message_id: replyToMessageId });
         })
     },
-    mybettings: (bot, msg, match, _specific_chatId) => {
+    mybettings: (bot, msg, match,) => {
         return TryCatch(async () => {
             const replyToMessageId = msg.message_id;
             // this has a reply (go to bot_reply.js file for more information)
-            const chatId = _specific_chatId ? _specific_chatId : getChatId(msg);
+            const chatId = getChatId(msg);
             const userName = msg.from.username;
             const basicInfo = await getWalletBasicInfoToProceed(userName, bot, msg);
             if (!basicInfo.isAllTrue) {
@@ -160,7 +160,6 @@ const index = {
             findUserBetting.map((element) => {
                 replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning ? 'active 🟢' : 'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning ? `play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}` : ""}\n----------------`
             })
-            console.log(_specific_chatId)
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
         })
     },
