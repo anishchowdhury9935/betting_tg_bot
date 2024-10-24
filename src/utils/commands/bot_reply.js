@@ -28,7 +28,7 @@ const bot_reply = [
                     return;
                 }
                 if (Number(msgTxt) < config.bettingInfo.bettingAmount.min || Number(msgTxt) > config.bettingInfo.bettingAmount.max) {
-                    bot.sendMessage(getChatId(msg), `Please enter a valid amount between \n${config.bettingInfo.bettingAmount.min}-${config.bettingInfo.bettingAmount.max}${config.memeCoinInfo.name}`, { reply_to_message_id: replyToMessageId });
+                    bot.sendMessage(getChatId(msg), `Please enter a valid amount between \n${config.bettingInfo.bettingAmount.min}-${config.bettingInfo.bettingAmount.max} ${config.memeCoinInfo.name}`, { reply_to_message_id: replyToMessageId });
                     return;
                 }
                 const { balance } = await getTokenBalanceAsBettingAmount(userName);
