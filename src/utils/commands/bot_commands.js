@@ -79,7 +79,7 @@ const index = {
                     };
                     const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance > 0 ? balance : 0} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
                     const chatId = _specific_chatId ? _specific_chatId : getChatId(msg);
-                    bot.sendMessage(chatId, replyTxt, {
+                    bot.sendMessage(_specific_chatId, replyTxt, {
                         parse_mode: "HTML",
                         reply_markup: replyMarkup,
                         reply_to_message_id: replyToMessageId
