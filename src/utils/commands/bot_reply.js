@@ -64,7 +64,6 @@ const bot_reply = [
                 if (!basicInfo.isAllTrue) {
                     return;
                 }
-                console.log(msgTxt)
                 globalVariables.games.map(({ commandName }) => {
                     if (commandName === msgTxt) {
                         isCommandRight = true;
