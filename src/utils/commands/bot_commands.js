@@ -54,7 +54,7 @@ const index = {
             bot.sendMessage(getChatId(msg), reply, { reply_markup: replyMarkup, reply_to_message_id: replyToMessageId });
         });
     },
-    wallet: (bot, msg, match) => {
+    wallet: (bot, msg, match,_specific_chatId) => {
         TryCatch(async () => {
             const userName = msg.from.username;
             const replyToMessageId = msg.message_id;
@@ -78,7 +78,8 @@ const index = {
                         ],
                     };
                     const replyTxt = `🪙 *WALLET INFO* 🪙\n\n📬 *Your Address:* <code>${walletAddress.publicKey}</code>\n\nYou can use this wallet address to add ${config.memeCoinInfo.name}\n\n 💰*Current Balance:* ${balance > 0 ? balance : 0} ${config.memeCoinInfo.name}\n\nYou can withdraw your *${config.memeCoinInfo.name}* by clicking on the 💸 *Withdraw* button below.`;
-                    bot.sendMessage(getChatId(msg), replyTxt, {
+                    const chatId = _specific_chatId ? _specific_chatId : getChatId(msg);
+                    bot.sendMessage(chatId, replyTxt, {
                         parse_mode: "HTML",
                         reply_markup: replyMarkup,
                         reply_to_message_id: replyToMessageId
@@ -161,7 +162,6 @@ const index = {
                 replyTxt += `----------------\nName of game: ${element.nameOfBet}\n\nstatus: ${element.bettingState.isRunning ? 'active 🟢' : 'ended 🔴'}\n\nAmount 💵: ${element.bettingAmount} ${config.memeCoinInfo.name}\n\n${element.bettingState.isRunning ? `play link :\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${element._id}_type-${'play'}_game-${element.nameOfBet}` : ""}\n----------------`
             })
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
-
         })
     },
 

@@ -4,7 +4,6 @@ const UserRpsGameData = require("../../db/models/UserRpsGameData");
 const userDetails = require("../../db/models/userDetails");
 const { TryCatch, getChatId, getWalletBasicInfoToProceed, getTokenBalanceAsBettingAmount } = require("../../helper/helperMain");
 const { getUserMemeCoinBalanceObj } = require("../../helper/helperWeb3");
-
 // these commands is for deep link's 
 const index = {
     join: (bot, msg, match, dataExtractedThroughLink) => {
@@ -14,7 +13,6 @@ const index = {
             const chatId = getChatId(msg);
             const userName = msg.from.username;
             const basicInfo = await getWalletBasicInfoToProceed(userName, bot, msg);
-            console.log(msg);
             if (!basicInfo.isAllTrue) {
                 return;
             }
@@ -41,11 +39,11 @@ const index = {
             // const addUserToBetData = await UserRpsGameData.
             const findUserBettingData = await UserRpsGameData.findOne({ bettingId });
             if (!findUserBettingData) {
-                    const newBet = await UserRpsGameData.create({ bettingId, playerRoundWin: [{ userId: findUser._id, winCount: 0 }] });
-                } else {
-                    const newArr = [...findUserBettingData.playerRoundWin, {userId:findUser._id,winCount:0}];
-                    const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
-                }
+                const newBet = await UserRpsGameData.create({ bettingId, playerRoundWin: [{ userId: findUser._id, winCount: 0 }] });
+            } else {
+                const newArr = [...findUserBettingData.playerRoundWin, { userId: findUser._id, winCount: 0 }];
+                const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
+            }
             bot.sendMessage(chatId, `@${userName} have betted ${findBetDetails.bettingAmount} ${config.memeCoinInfo.name} on ${findBetDetails.nameOfBet}\n\nClick on the link below to play the game:\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${bettingId}_type-${'play'}_game-${findUser.bettingInfo.nameOfBet}\n\n you can use /mybettings to show the betting status`, { reply_to_message_id: replyToMessageId });
         })
     },

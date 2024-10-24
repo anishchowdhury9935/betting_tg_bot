@@ -6,6 +6,7 @@ const UserRpsGameData = require("../../db/models/UserRpsGameData");
 const globalVariables = require("../../global/globalVariables");
 const { TryCatch, getChatId, isNumeric, getTokenBalanceAsBettingAmount, isValidPublicKey, hasTokenAccountForMint, getWalletBasicInfoToProceed } = require("../../helper/helperMain");
 const { transferMemeCoin } = require("../../helper/helperWeb3");
+const bot_commands = require('./bot_commands.js')
 const bot_reply = [
     {
         repliedMsgTxt: `Please reply to this message with the amount of ${config.memeCoinInfo.name} you want to bet in it`,
@@ -45,8 +46,10 @@ const bot_reply = [
                     const newArr = [...findUserBettingData.playerRoundWin, { userId: findUser._id, winCount: 0 }];
                     const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
                 }
-                const deleteNameOfbetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
+                const deleteNameOfBetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
                 bot.sendMessage(getChatId(msg), `@${userName} has started a new bet on /${findUser.bettingInfo.nameOfBet} \n\n click on the link below to bet on it\n\nhttps://t.me/${config.botInfo.botTgUserName}?start=bettingId-${createNewBet._id}_type-${'join'}_game-${findUser.bettingInfo.nameOfBet}`, { reply_to_message_id: replyToMessageId });
+                // bot_commands.sendMessage()
+                console.log(msg)
             })
         }
     },
