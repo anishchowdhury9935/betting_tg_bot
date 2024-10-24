@@ -42,7 +42,7 @@ const bot_reply = [
                 if (!findUserBettingData) {
                     const newBet = await UserRpsGameData.create({ bettingId, playerRoundWin: [{ userId: findUser._id, winCount: 0 }] });
                 } else {
-                    const newArr = [...findUserBettingData.playerRoundWin, {userId:findUser._id,winCount:0}];
+                    const newArr = [...findUserBettingData.playerRoundWin, { userId: findUser._id, winCount: 0 }];
                     const updateBet = await UserRpsGameData.updateOne({ bettingId }, { playerRoundWin: [...newArr] });
                 }
                 const deleteNameOfbetFromUserDetails = await userDetails.updateOne({ userName }, { bettingInfo: { nameOfBet: '' } })
@@ -65,6 +65,7 @@ const bot_reply = [
                     return;
                 }
                 globalVariables.games.map(({ commandName }) => {
+                    console.log(msgTxt.toString(),msgTxt)
                     if (commandName === msgTxt.toString()) {
                         isCommandRight = true;
                     }
