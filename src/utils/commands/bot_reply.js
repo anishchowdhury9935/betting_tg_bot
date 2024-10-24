@@ -55,7 +55,7 @@ const bot_reply = [
         func: (bot, msg) => {
             return TryCatch(async () => {
                 const replyToMessageId = msg.message_id;
-                const msgTxt = msg.text;
+                const msgTxt = msg.text?.toString();
                 const userName = msg.from.username;
                 const chatId = getChatId(msg)
                 const findUser = await userDetails.findOne({ userName }).select(['_id']);
@@ -65,8 +65,8 @@ const bot_reply = [
                     return;
                 }
                 globalVariables.games.map(({ commandName }) => {
-                    console.log(msgTxt.toString(),msgTxt)
-                    if (commandName === msgTxt.toString()) {
+                    console.log( msgTxt)
+                    if (commandName === msgTxt) {
                         isCommandRight = true;
                     }
                 })
