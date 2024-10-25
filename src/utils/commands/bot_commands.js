@@ -84,11 +84,11 @@ const index = {
                         reply_markup: replyMarkup,
                         reply_to_message_id: replyToMessageId
                     });
-                    return;
                 } catch (error) {
                     bot.sendMessage(getChatId(msg), "failed to make wallet ❌", { reply_to_message_id: replyToMessageId });
                     // throw new Error(error);
                 }
+                return;
             }
             bot.sendMessage(getChatId(msg), "You don't have any wallet 🙅🏻. Please make it first by using the /create command.", { reply_to_message_id: replyToMessageId });
         });
