@@ -60,7 +60,8 @@ const index = {
             const replyToMessageId = msg.message_id;
             const getUserWallet = await userDetails.findOne({ userName }).select(['walletAddress', '-_id']);
             if (getUserWallet) {
-                const { publicKey } = getUserWallet.walletAddress
+                const { publicKey } = getUserWallet.walletAddress;
+                console.log(publicKey)
                 // bot.sendMessage(getChatId(msg), "");
                 if (!hasTokenAccountForMint(publicKey)) {
                     bot.sendMessage(getChatId(msg), `It mit take some time for first time to signin with ${config.memeCoinInfo.name}......`, { reply_to_message_id: replyToMessageId });
