@@ -169,15 +169,15 @@ const index = {
         return TryCatch(async () => {
             const chatId = getChatId(msg);
             const replyToMessageId = msg.message_id;
-            let replyTxt = `**Top 10 players 🎉**\n\nusername - 💵${config.memeCoinInfo.name} coin\n`;
+            let replyTxt = "**🎉 Top 10 players 🎉**\n\n\n";
             const findPlayers = await userDetails.find().sort({ "winningData.totalCoinsWin": -1 }).limit(10).select(['-_id', 'winningData', 'userName']);
             if (findPlayers.length) {
                 findPlayers?.map((element, index) => {
-                    if (index - 1 === findPlayers.length) {
-                        replyTxt += `${element.userName} - ${element.winningData.totalCoinsWin}\n\nPlay more and you will be there 😉`
+                    if (index === findPlayers.length-1) {
+                        replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n\nPlay more and you will be there 😉`
                         return;
                     }
-                    replyTxt += `${element.userName} - ${element.winningData.totalCoinsWin}\n`
+                    replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n`
                 })
             } else {
                 replyTxt = 'There is no players to show still know !'
