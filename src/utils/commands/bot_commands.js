@@ -168,7 +168,7 @@ const index = {
     leaderboard: (bot, msg, match,) => {
         return TryCatch(async () => {
             const chatId = getChatId(msg);
-            const userName = msg.from.username;
+            const replyToMessageId = msg.message_id;
             let replyTxt = `**Top 10 players 🎉**\n\nusername - 💵${config.memeCoinInfo.name} coin\n`;
             const findPlayers = await userDetails.find().sort({ "winningData.totalCoinsWin": -1 }).limit(10).select(['-_id', 'winningData', 'userName']);
             if (findPlayers.length) {
@@ -179,7 +179,7 @@ const index = {
                     }
                     replyTxt += `${element.userName} - ${element.winningData.totalCoinsWin}\n`
                 })
-            }else{
+            } else {
                 replyTxt = 'There is no players to show still know !'
             }
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
