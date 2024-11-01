@@ -182,7 +182,7 @@ const index = {
                     replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n`
                 })
             } else {
-                replyTxt = 'There is no players to show still know !'
+                replyTxt = 'There is no players to show till know !'
             }
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
         })
