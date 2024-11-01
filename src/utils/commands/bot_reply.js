@@ -147,8 +147,8 @@ const bot_reply = [
                 bot.sendMessage(getChatId(msg), 'transaction proceeding please wait...', { reply_to_message_id: replyToMessageId });
                 const transaction = await transferMemeCoin(walletAddress.privateKey, findUserTransactionData.withdrawData.publicKey, msgTxt);
                 if (transaction) {
-                    const deleteTransactionData = await userTransactionData.deleteOne({ userName });
                     bot.sendMessage(getChatId(msg), `Transaction successful✅ ${msgTxt} ${config.memeCoinInfo.name} sended to <code>${findUserTransactionData.withdrawData.publicKey}</code>`, { parse_mode: "HTML", reply_to_message_id: replyToMessageId });
+                    const deleteTransactionData = await userTransactionData.deleteOne({ userName });
                 } else {
                     bot.sendMessage(getChatId(msg), "Transaction failed❌", { reply_to_message_id: replyToMessageId });
                 }
