@@ -48,7 +48,7 @@ try {
             await userDetails.updateOne({ _id: winnerId },
                 { $inc: { "winningData.totalCoinsWin": findBet.bettingAmount, "winningData.gamesWin": 1 } }
             )
-
+            console.log({_id: findLoser._id})
             await userDetails.updateOne({ _id: findLoser._id, "winningData.gamesLose": { $gte: 0 } },
                 { $inc: { "winningData.gamesLose": 1, } }
             )
