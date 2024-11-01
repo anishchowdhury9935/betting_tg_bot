@@ -170,10 +170,12 @@ const index = {
             const chatId = getChatId(msg);
             const replyToMessageId = msg.message_id;
             let replyTxt = "**🎉 Top 10 players 🎉**\n\n";
-            const findPlayers = await userDetails.find().sort({ "winningData.totalCoinsWin": -1 }).limit(10).select(['-_id', 'winningData', 'userName']);
+            const findPlayers = await userDetails.find({ "winningData.totalCoinsWin": { $gt: 0 } })
+                .sort({ "winningData.totalCoinsWin": -1 })
+                .limit(10).select(['-_id', 'winningData', 'userName']);
             if (findPlayers.length) {
                 findPlayers?.map((element, index) => {
-                    if (index === findPlayers.length-1) {
+                    if (index === findPlayers.length - 1) {
                         replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n\nPlay more and you will be there 🔥`
                         return;
                     }
