@@ -45,6 +45,9 @@ try {
             const amountToSentInWinnerWallet = betAmount - cutOffAmount;
             const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
             const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);
+            await userDetails.updateOne({ _id: winnerId },
+                { $inc: { "winningData.totalCoinsWin": findBet.bettingAmount, "winningData.gamesWin": 1 } }
+            )
             console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
             console.log("Bet Amount:", betAmount);
             console.log("Cut Off Amount:", cutOffAmount);

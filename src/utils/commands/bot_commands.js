@@ -61,11 +61,10 @@ const index = {
             const getUserWallet = await userDetails.findOne({ userName }).select(['walletAddress', '-_id']);
             if (getUserWallet) {
                 const { publicKey } = getUserWallet.walletAddress;
-                console.log(publicKey)
                 // bot.sendMessage(getChatId(msg), "");
-                if (!hasTokenAccountForMint(publicKey)) {
-                    bot.sendMessage(getChatId(msg), `It mit take some time for first time to signin with ${config.memeCoinInfo.name}......`, { reply_to_message_id: replyToMessageId });
-                }
+                // if (!hasTokenAccountForMint(publicKey)) {
+                //     bot.sendMessage(getChatId(msg), `It mit take some time for first time to signin with ${config.memeCoinInfo.name}......`, { reply_to_message_id: replyToMessageId });
+                // }
                 try {
                     const { walletAddress, balance } = await getTokenBalanceAsBettingAmount(userName);
                     const replyMarkup = {
@@ -116,8 +115,10 @@ const index = {
     },
     stats: (bot, msg, match) => {
         return TryCatch(async () => {
+            const userName = msg.from.username;
             const replyToMessageId = msg.message_id;
-            const replyTxt = `📊 Your Game Statistics 📊\n\n🏆 Games Won: ${0}\n❌ Games Lost: ${0}\n💰 Total Winnings: ${0} ${config.memeCoinInfo.name}\n\nKeep playing and good luck!\n`
+            const findUser = await userDetails.findOne({ userName });
+            const replyTxt = `📊 Your Game Statistics 📊\n\n🏆 Games Won: ${findUser.winningData.gamesWin ?? 0}\n❌ Games Lost: ${findUser.winningData.gamesLost ?? 0}\n💰 Total Winnings: ${findUser.winningData.totalCoinsWin ?? 0}\n\nKeep playing and good luck!\n`;
             bot.sendMessage(getChatId(msg), replyTxt, { reply_to_message_id: replyToMessageId });
         })
     },

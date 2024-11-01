@@ -14,6 +14,14 @@ const UserDetailsSchema = new mongoose.Schema({
             nameOfBet:'',
         }
     },
+    winningData:{
+        type:Object,
+        default:{
+            totalCoinsWin:0,
+            gamesWin:0,
+            gamesLost:0
+        }
+    }
 });
 
 const userDetails = mongoose.model("userDetails", UserDetailsSchema);
