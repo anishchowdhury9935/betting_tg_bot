@@ -36,15 +36,7 @@ try {
             const findLoserId = findBet.playersId.filter((val) => {
                 return val.toString() !== findWinner._id.toString();  // Ensure the IDs are compared as strings
             });
-
             const findLoser = await userDetails.findById({ _id: findLoserId[0] });
-            const betAmount = findBet.bettingAmount;
-            const winnerWalletPublicKey = findWinner.walletAddress.publicKey;
-            const loserWalletPrivateKey = findLoser.walletAddress.privateKey;
-            const cutOffAmount = calculatePercentage(2, betAmount);
-            const amountToSentInWinnerWallet = betAmount - cutOffAmount;
-            const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
-            const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);
             await userDetails.updateOne({ _id: winnerId },
                 { $inc: { "winningData.totalCoinsWin": findBet.bettingAmount, "winningData.gamesWin": 1 } }
             )
@@ -52,19 +44,25 @@ try {
             await userDetails.updateOne({ _id: findLoser._id.toString(), "winningData.gamesLose": { $gte: 0 } },
                 { $inc: { "winningData.gamesLose": 1, } }
             )
-
-            console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
-            console.log("Bet Amount:", betAmount);
-            console.log("Cut Off Amount:", cutOffAmount);
-            console.log("Amount to Send to Winner:", amountToSentInWinnerWallet);
-            console.log("Winner Wallet Public Key:", winnerWalletPublicKey);
-            console.log("Loser Wallet Private Key:", loserWalletPrivateKey);
-            if (transferMemeCoinToWinner || transferMemeCoinOfCutOff) {
-                const deleteBet = await userBettingData.deleteOne({ _id: bettingId });
-                const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
-            } else {
-                const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
-            }
+            const betAmount = findBet.bettingAmount;
+            const winnerWalletPublicKey = findWinner.walletAddress.publicKey;
+            const loserWalletPrivateKey = findLoser.walletAddress.privateKey;
+            const cutOffAmount = calculatePercentage(2, betAmount);
+            const amountToSentInWinnerWallet = betAmount - cutOffAmount;
+            // const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
+            // const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);
+            // console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
+            // console.log("Bet Amount:", betAmount);
+            // console.log("Cut Off Amount:", cutOffAmount);
+            // console.log("Amount to Send to Winner:", amountToSentInWinnerWallet);
+            // console.log("Winner Wallet Public Key:", winnerWalletPublicKey);
+            // console.log("Loser Wallet Private Key:", loserWalletPrivateKey);
+            // if (transferMemeCoinToWinner || transferMemeCoinOfCutOff) {
+            //     const deleteBet = await userBettingData.deleteOne({ _id: bettingId });
+            //     const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
+            // } else {
+            //     const deleteBetData = await UserRpsGameData.deleteOne({ bettingId });
+            // }
             return res.status(200).json({ msg: '' });
         }, res)
     })
