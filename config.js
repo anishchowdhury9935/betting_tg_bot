@@ -11,8 +11,8 @@ const config = {
         mongoHostUrlMain: devModeOn ? false : "mongodb+srv://nomoonsolana:nomosol9935@cluster0.itrhg7m.mongodb.net/tg_betting_bot",//**
     },
     memeCoinInfo: {
-        mintAddress: 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
-        // mintAddress: devModeOn ? '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' : 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
+        // mintAddress: 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
+        mintAddress: devModeOn ? '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' : 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
         name: devModeOn ? 'USDC' : 'NOMO',//**
 
     }, bettingInfo: {
