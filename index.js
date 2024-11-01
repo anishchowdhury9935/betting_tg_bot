@@ -48,6 +48,11 @@ try {
             await userDetails.updateOne({ _id: winnerId },
                 { $inc: { "winningData.totalCoinsWin": findBet.bettingAmount, "winningData.gamesWin": 1 } }
             )
+
+            await userDetails.updateOne({ _id: findLoser._id, "winningData.gamesLose": { $gte: 0 } },
+                { $inc: { "winningData.gamesLose": 1, } }
+            )
+
             console.log(transferMemeCoinToWinner, transferMemeCoinOfCutOff)
             console.log("Bet Amount:", betAmount);
             console.log("Cut Off Amount:", cutOffAmount);

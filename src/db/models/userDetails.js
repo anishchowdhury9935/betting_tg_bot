@@ -19,7 +19,7 @@ const UserDetailsSchema = new mongoose.Schema({
         default:{
             totalCoinsWin:0,
             gamesWin:0,
-            gamesLost:0
+            gamesLose:0
         }
     }
 });
