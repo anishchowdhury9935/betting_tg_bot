@@ -176,10 +176,10 @@ const index = {
             if (findPlayers.length) {
                 findPlayers?.map((element, index) => {
                     if (index === findPlayers.length - 1) {
-                        replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n\nPlay more and you will be there 🔥`
+                        replyTxt += `🏆@${element.userName} \t- ${element.winningData.totalCoinsWin}\n\nPlay more and you will be there 🔥`
                         return;
                     }
-                    replyTxt += `🏆${element.userName} - ${element.winningData.totalCoinsWin}\n`
+                    replyTxt += `🏆@${element.userName} \t- ${element.winningData.totalCoinsWin}\n`
                 })
             } else {
                 replyTxt = 'There is no players to show till know !'
