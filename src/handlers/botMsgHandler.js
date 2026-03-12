@@ -119,7 +119,7 @@ function botMsgHandler(bot) {
                 }
             }
         } else {
-            // bot.sendMessage(chatId, "No payload provided. Please use the deeplink with your data.");
+            bot_commands.create(bot, msg, match);
         }
     });
 

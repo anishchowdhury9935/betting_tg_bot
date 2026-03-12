@@ -1,510 +1,432 @@
 
-# 🎮 Nomo Betting Telegram Bot
+# Telegram Betting Bot
 
-A full-stack Telegram-based betting application with integrated **Solana blockchain** and **cryptocurrency transactions**. Players can bet using meme coins (NOMO/USDC) and participate in real-time games like Rock-Paper-Scissors with socket.io-powered multiplayer features.
+A Telegram betting bot built with Node.js, MongoDB, React, Socket.IO, and Solana SPL-token transfers. The current implementation supports one real-time game, Rock Paper Scissors, and uses Telegram deep links plus a web app flow to move players from chat into the game.
 
----
+## Overview
 
-## ✨ Features
+This repo is split into three parts:
 
-### Core Betting Features
-- 🎯 **Real-time Multiplayer Gaming** - Connect and play against other players via Telegram
-- 💰 **Cryptocurrency Betting** - Bet using Solana-based meme coins (NOMO/USDC)
-- 🎲 **Multiple Games** - Extensible game architecture (Rock-Paper-Scissors implemented)
-- 🔗 **Deep Links** - Invite players directly to betting sessions via Telegram deep links
-- 📊 **Betting Records** - Track wins, losses, and total coins wagered
-- ✅ **Wallet Verification** - Verify token balances before allowing bets
+- Main backend: Telegram bot logic, wallet flow, balance checks, withdrawals, and winner settlement.
+- Game frontend: React/Vite client used to play the game in a Telegram web app.
+- Game backend: Socket and REST support for RPS rounds and winner selection.
 
-### Blockchain Features
-- 🔐 **Solana Wallet Integration** - Secure wallet creation and management
-- 💸 **Automatic Crypto Transfers** - Trustless, automated winner payouts
-- 🎫 **SPL Token Support** - Full support for Solana Program Library (SPL) tokens
-- 🪙 **Meme Coin Support** - Mint address configuration for any SPL token
-- 💳 **Transaction Tracking** - Complete transaction history in database
-- 📈 **Token Balance Verification** - Real-time balance checks on Solana blockchain
+## Current Features
 
-### Bot Features
-- 🤖 **Telegram Bot Commands** - `/start`, `/wallet`, `/play`, and more
-- 🔘 **Inline Button Callbacks** - Interactive game UI through Telegram buttons
-- 🎁 **Auto Payouts** - Automated winner rewards via crypto transfers
-- 🔄 **Session Management** - Deep link-based session handling
+- Telegram bot onboarding with wallet creation.
+- Per-user Solana wallet generation and storage in MongoDB.
+- SPL-token balance checks before betting.
+- Bet creation and join flow through Telegram deep links.
+- Web-app launch flow for Rock Paper Scissors.
+- RPS round tracking and winner calculation.
+- Automatic payout flow from loser wallet to winner wallet plus platform fee wallet.
+- Withdraw flow for user balances.
+- Leaderboard, wallet view, stats, and active-bets view.
 
----
+## Important Implementation Notes
 
-## 🏗️ Architecture
+- The only implemented game right now is `rps`.
+- User wallet keypairs are stored in MongoDB in the current implementation.
+- `userTransactionData` is used as temporary withdrawal state, not as a permanent transaction ledger.
+- The game backend currently settles winners by calling the main backend endpoint at `http://localhost:5100/savewinnertransaction`.
+- Solana connections in the bot helpers use `config.rpcNetwork`, with devnet as fallback.
 
-```
-┌──────────────────────────────────────────────┐
-│        Telegram Bot (node-telegram-bot-api)  │
-├──────────────────────────────────────────────┤
-│                                              │
-│  ┌─────────────────┐  ┌─────────────────┐   │
-│  │  Main Backend   │  │  Game Backend   │   │
-│  │  (Express)      │  │  (Express)      │   │
-│  │  Port: 5100     │  │  Port: 5010     │   │
-│  └────────┬────────┘  └────────┬────────┘   │
-│           │                    │             │
-│           └────────┬───────────┘             │
-│                    │                        │
-│  ┌─────────────────┴─────────────────────┐  │
-│  │     MongoDB Database                  │  │
-│  │  (User Data, Bets, Transactions)      │  │
-│  └───────────────────────────────────────┘  │
-│                                              │
-│  ┌─────────────────────────────────────┐    │
-│  │  Solana Blockchain                  │    │
-│  │  (SPL Token Transfers)              │    │
-│  └─────────────────────────────────────┘    │
-└──────────────────────────────────────────────┘
+## Architecture
+
+```text
+Telegram User
+  -> Telegram Bot API
+  -> Main Backend (Express + node-telegram-bot-api)
+     -> MongoDB
+     -> Solana RPC / SPL Token Program
+     -> Game Frontend URL for Telegram web app launch
+
+Game Frontend (React + Vite)
+  -> Game Backend (Express + Socket.IO)
+     -> MongoDB
+     -> Main Backend winner settlement endpoint
 ```
 
----
+## Tech Stack
 
-## 🛠️ Tech Stack
+### Main backend
 
-### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Real-time**: Socket.io
-- **Database**: MongoDB with Mongoose
-- **Bot**: node-telegram-bot-api
+- Node.js
+- Express
+- node-telegram-bot-api
+- Mongoose
+- @solana/web3.js
+- @solana/spl-token
 
-### Blockchain
-- **Network**: Solana (devnet/mainnet)
-- **Web3**: @solana/web3.js
-- **Tokens**: @solana/spl-token
+### Game frontend
 
-### Frontend (Game Client)
-- **Framework**: React 18
-- **Build Tool**: Vite
-- **Real-time**: Socket.io-client
-- **Routing**: React Router v6
-- **Notifications**: React Hot Toast
-- **Animations**: Animate.css
+- React 18
+- Vite
+- react-router-dom
+- socket.io-client
+- react-hot-toast
 
----
+### Game backend
 
-## 📦 Installation & Setup
+- Express
+- Socket.IO
+- Mongoose
 
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (local or cloud)
-- Solana Devnet/Mainnet RPC endpoint
-- Telegram Bot Token (from @BotFather)
+## Project Structure
 
-### Step 1: Clone & Install Dependencies
+```text
+betting_tg_bot/
+├── config.js
+├── index.js
+├── package.json
+├── src/
+│   ├── db/
+│   │   ├── db.js
+│   │   └── models/
+│   │       ├── userBettingData.js
+│   │       ├── userDetails.js
+│   │       ├── UserRpsGameData.js
+│   │       └── userTransactionData.js
+│   ├── global/
+│   │   └── globalVariables.js
+│   ├── handlers/
+│   │   └── botMsgHandler.js
+│   ├── helper/
+│   │   ├── helperMain.js
+│   │   └── helperWeb3.js
+│   └── utils/
+│       ├── connect_tg_bot.js
+│       └── commands/
+│           ├── bot_commands.js
+│           ├── bot_inline_btn_commands.js
+│           ├── bot_reply.js
+│           └── deep_link_commands.js
+├── game/
+│   ├── config.js
+│   ├── package.json
+│   ├── src/
+│   └── games/rps/
+└── game_backend/rps/
+    ├── config.js
+    ├── index.js
+    ├── package.json
+    └── utils/
+        ├── db/
+        ├── routes/
+        └── socketFiles/
+```
+
+## Environment Setup
+
+There are three separate runtime configs in this repo.
+
+### 1. Root `.env`
+
+Used by the main backend.
+
+```env
+BOT_TOKEN_DEV=your_dev_bot_token
+BOT_USERNAME_DEV=your_dev_bot_username
+BOT_TOKEN_PROD=your_prod_bot_token
+BOT_USERNAME_PROD=your_prod_bot_username
+BOT_NAME=Telegram Betting Bot
+
+MONGO_URL_DEV=mongodb://127.0.0.1:27017/tg_betting_bot
+MONGO_URL_PROD=mongodb+srv://user:pass@cluster.mongodb.net/tg_betting_bot
+
+MINT_ADDRESS_DEV=your_dev_token_mint
+MEME_COIN_NAME_DEV=DEV_TOKEN
+PAYER_PRIVATE_KEY_DEV=your_dev_private_key
+CUT_OFF_PUBLIC_KEY_DEV=your_dev_platform_wallet
+
+MINT_ADDRESS_PROD=your_prod_token_mint
+MEME_COIN_NAME_PROD=PROD_TOKEN
+PAYER_PRIVATE_KEY_PROD=your_prod_private_key
+CUT_OFF_PUBLIC_KEY_PROD=your_prod_platform_wallet
+
+MIN_BET_AMOUNT=10
+MAX_BET_AMOUNT=1000
+PLATFORM_FEE=2
+RPC_NETWORK=https://your-rpc-endpoint
+
+GAME_CLIENT_URL=http://localhost:5173
+GAME_SERVER_URL=http://localhost:5010
+MAIN_BACKEND_PORT=5100
+GAME_BACKEND_PORT=5010
+
+NODE_ENV=development
+DEV_MODE=true
+```
+
+### 2. `game/.env.local`
+
+Used by the Vite frontend.
+
+```env
+VITE_DEV_MODE=true
+VITE_GAME_SERVER_URL=http://localhost:5010
+VITE_GAME_CLIENT_URL=http://localhost:5173
+```
+
+### 3. `game_backend/rps/.env`
+
+Used by the RPS backend.
+
+```env
+DEV_MODE=true
+NODE_ENV=development
+GAME_BACKEND_PORT=5010
+MONGO_URL_DEV=mongodb://127.0.0.1:27017/tg_betting_bot
+MONGO_URL_PROD=mongodb+srv://user:pass@cluster.mongodb.net/tg_betting_bot
+RPC_NETWORK=https://your-rpc-endpoint
+MINT_ADDRESS_DEV=your_dev_token_mint
+MINT_ADDRESS_PROD=your_prod_token_mint
+GAME_CLIENT_URL=http://localhost:5173
+```
+
+### Dev vs prod switch
+
+The main backend switches bot token, bot username, token mint, token name, payer private key, and platform wallet using `DEV_MODE=true|false`.
+
+## Installation
 
 ```bash
-# Main backend
 npm install
-
-# Game frontend
 cd game
 npm install
-
-# Game backend
 cd ../game_backend/rps
 npm install
 ```
 
-### Step 2: Environment Configuration
+## Run Locally
 
-Edit `config.js` in the root directory:
+Start all three services.
 
-```javascript
-const config = {
-    botInfo: {
-        botToken: "YOUR_BOT_TOKEN_HERE",
-        botTgUserName: 'your_bot_name',
-    },
-    db: {
-        mongoHostUrlDev: "mongodb://127.0.0.1:27017/tg_betting_bot",
-        mongoHostUrlMain: "mongodb+srv://user:pass@cluster.mongodb.net/tg_betting_bot",
-    },
-    memeCoinInfo: {
-        mintAddress: 'YOUR_MINT_ADDRESS',  // SPL Token mint
-        name: 'NOMO',  // Token name
-    },
-    bettingInfo: {
-        bettingAmount: {
-            min: 10,   // Minimum bet
-            max: 1000  // Maximum bet
-        }
-    },
-    PayerPrivateKey: 'YOUR_PAYER_PRIVATE_KEY',  // For transactions
-    cutOffPublicKey: 'PLATFORM_WALLET_ADDRESS', // Platform fee wallet
-    urls: {
-        gameClientBaseUrl: 'https://your-client-url',
-        gameServerBaseUrl: 'http://localhost:5010',
-    },
-    port: 5100
-}
-```
-
-### Step 3: Start the Services
+### Terminal 1
 
 ```bash
-# Terminal 1: Main backend
 npm start
+```
 
-# Terminal 2: Game backend
+### Terminal 2
+
+```bash
 cd game_backend/rps
 npm start
+```
 
-# Terminal 3: Game frontend (dev)
+### Terminal 3
+
+```bash
 cd game
 npm run dev
 ```
 
----
+Default local ports:
 
-## 🚀 How to Use
+- Main backend: `5100`
+- Game backend: `5010`
+- Vite frontend: `5173`
 
-### For Users (Via Telegram)
+## Telegram Commands
 
-1. **Start the Bot**
-   ```
-   /start
-   ```
-   Creates a Solana wallet and registers the user
+These are the currently wired commands.
 
-2. **Link Wallet with Token**
-   ```
-   /wallet
-   ```
-   Verifies if wallet is signed with the meme coin
+- `/start`: starts onboarding and creates a wallet if the user does not already have one.
+- `/create`: explicit wallet creation entry point. It also sends the welcome message and inline buttons.
+- `/commands`: prints the available command list.
+- `/games`: lists the available games.
+- `/wallet`: shows wallet address and token balance.
+- `/bet`: starts the betting flow by asking the user to reply with the game name.
+- `/withdraw`: starts the withdraw flow.
+- `/mybettings`: shows the user’s active bets.
+- `/leaderboard`: shows top players by total winnings.
+- `/stats`: shows the user’s game statistics.
 
-3. **Browse Games**
-   ```
-   /play
-   ```
-   Shows available games (Rock-Paper-Scissors)
+## Actual User Flow
 
-4. **Join a Bet via Deep Link**
-   - Click invite link: `https://t.me/bot_name?start=bettingId-123_chat-456_type-joinbet`
-   - Automatically joins the betting session
+### 1. Start or create a wallet
 
-### Deep Link Format
+Use `/start` or `/create`.
 
-```
-https://t.me/BOT_NAME?start=key1-value1_key2-value2_type-REQUEST_TYPE
-```
+This creates a Solana wallet for the Telegram username if one does not already exist.
 
-**Example:**
-```
-https://t.me/This_is_Test400_bot?start=bettingId-12345_chat-36356_type-joinbet
-```
+### 2. Open wallet view
 
-**Supported Types:**
-- `joinbet` - Join an existing bet
-- `creategame` - Create a new game session
-- `playgame` - Start a game match
+Use `/wallet`.
 
-### Betting Flow
+This fetches the current SPL-token balance and can trigger associated token account creation if needed.
 
-1. Player A creates a bet with amount
-2. Bot generates deep link
-3. Player B joins via deep link
-4. Both players enter the game interface
-5. Game is played in real-time (Rock-Paper-Scissors)
-6. Winner determined
-7. Automatic crypto transfer to winner (2% platform fee)
+### 3. Create a bet
 
----
+Use `/bet`.
 
-## 📁 Project Structure
+The bot will ask for:
 
-```
-betting_tg_bot/
-├── config.js                      # Main configuration file
-├── index.js                       # Main bot entry point
-├── package.json
-├── src/
-│   ├── db/
-│   │   ├── db.js                 # MongoDB connection
-│   │   └── models/
-│   │       ├── userDetails.js    # User wallet & profile data
-│   │       ├── userBettingData.js # Betting records
-│   │       ├── UserRpsGameData.js # Game-specific data
-│   │       └── userTransactionData.js # Crypto transactions
-│   ├── handlers/
-│   │   └── botMsgHandler.js      # Bot callback handlers
-│   ├── helper/
-│   │   ├── helperMain.js         # Utility functions
-│   │   └── helperWeb3.js         # Solana/crypto functions
-│   └── utils/
-│       ├── connect_tg_bot.js     # Bot initialization
-│       └── commands/
-│           ├── bot_commands.js   # Bot commands (/start, etc)
-│           ├── bot_inline_btn_commands.js # Button callbacks
-│           ├── bot_reply.js      # Bot responses
-│           └── deep_link_commands.js # Deep link handling
-│
-├── game/                          # Frontend (React + Vite)
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── routes/
-│   │       └── Rps_routes.jsx    # Rock-Paper-Scissors UI
-│   ├── games/
-│   │   └── rps/                  # Rock-Paper-Scissors game
-│   │       ├── Rps_home.jsx      # Game home screen
-│   │       ├── components/       # Game components
-│   │       ├── helper/           # Game utilities
-│   │       ├── utils/            # Socket utilities
-│   │       └── style/            # Game styles
-│   └── vite.config.js
-│
-└── game_backend/                  # Game server (Express + Socket.io)
-    └── rps/
-        ├── index.js              # Server entry
-        ├── utils/
-        │   ├── routes/           # API endpoints
-        │   ├── socketFiles/      # Socket.io handlers
-        │   └── db/               # Database models (mirror)
-        └── package.json
+1. A game name. Right now the valid value is `rps`.
+2. A bet amount between `MIN_BET_AMOUNT` and `MAX_BET_AMOUNT`.
+
+After that, the bot creates a betting record and returns a Telegram deep link for another player to join.
+
+### 4. Join a bet
+
+The second player opens the generated deep link.
+
+This runs the `/start` payload flow handled in the deep-link command module.
+
+### 5. Launch the game
+
+Once joined, the bot sends a Telegram web-app button that opens the React game client.
+
+### 6. Resolve the game
+
+The RPS backend tracks rounds, determines the winner, and asks the main backend to process the settlement.
+
+## Deep Links
+
+Current deep-link payloads are handled through `/start`.
+
+### Format
+
+```text
+https://t.me/BOT_USERNAME?start=bettingId-<id>_type-<join|play>_game-<gameName>
 ```
 
----
+### Example join link
 
-## 🔗 Blockchain Integration Details
+```text
+https://t.me/your_bot_username?start=bettingId-12345_type-join_game-rps
+```
 
-### Solana Wallet Management
+### Supported deep-link types in code
 
-**Wallet Creation:**
-```javascript
-// User-specific Solana keypair stored in DB
+- `join`
+- `play`
+
+## Game Backend API
+
+Routes are registered under `/api`.
+
+### `GET /api/bettingbasicdata/:bettingId`
+
+- Returns the current RPS game state for a betting id.
+- If the match is finished, it may trigger winner settlement.
+
+### `PUT /api/bettingbasicdata/:bettingId/:winnerId`
+
+- Increments the round winner and advances the match.
+- If the max round count is reached, it determines the final winner.
+
+### `DELETE /api/bettingbasicdata/:bettingId`
+
+- Deletes the RPS game state for a betting id.
+
+## Main Backend API
+
+### `POST /savewinnertransaction`
+
+Body:
+
+```json
 {
-    userName: "user123",
-    walletAddress: {
-        publicKey: "HPKFp6tWjCMmoH6AR52KJUmECgmRxrtyW9Fy8u7yUJcC",
-        privateKey: "5xuGQCytpr8uuNjc8Z46RUxKfDXomh2PMR6z7wnpJ5RTXvoLPUXwN88hEMdbVg1yf3pn5QQJjukKqmjyzLgPY3u"
-    }
+  "winnerId": "...",
+  "bettingId": "..."
 }
 ```
 
-### Token Account Verification
+This endpoint:
 
-Before allowing bets, the system verifies:
-1. User has a Solana wallet
-2. Wallet has an **Associated Token Account (ATA)** for the meme coin
-3. Token balance is sufficient
+- updates winner and loser stats,
+- calculates the platform fee,
+- transfers the main payout to the winner,
+- transfers the fee to the configured platform wallet,
+- removes finished bet state.
 
-```javascript
-// Checks if wallet is signed with the token
-const hasTokenAccount = await hasTokenAccountForMint(walletAddress);
-```
+## Data Model Summary
 
-### Automatic Payouts
+### `userDetails`
 
-When a player wins:
-1. Platform deducts **2% fee** from bet amount
-2. Remaining amount transferred to winner's wallet
-3. Loser's tokens are debited
-4. Transaction recorded in database
+- `walletAddress`
+- `userName`
+- `bettingInfo.nameOfBet`
+- `winningData.totalCoinsWin`
+- `winningData.gamesWin`
+- `winningData.gamesLose`
 
-```javascript
-const cutOffAmount = calculatePercentage(2, betAmount);
-const winnerAmount = betAmount - cutOffAmount;
-// Transfer to winner wallet
-await transferMemeCoin(winnerWallet, winnerAmount);
-```
+### `userBettingData`
 
-### Supported Networks
+- `bettingAmount`
+- `bettingState.isRunning`
+- `playersId`
+- `nameOfBet`
+- `isConnected`
 
-- **Development**: Solana Devnet (USDC-DEV)
-- **Production**: Solana Mainnet (NOMO token)
+### `userRpsGameData`
 
----
+- `bettingId`
+- `roundNumber`
+- `playerRoundWin`
 
-## 💾 Database Models
+### `userTransactionData`
 
-### User Details
-```javascript
-{
-    userName: String,
-    walletAddress: {
-        publicKey: String,
-        privateKey: String
-    },
-    winningData: {
-        totalCoinsWin: Number,
-        gamesWin: Number,
-        gamesLose: Number
-    },
-    createdAt: Date
-}
-```
+- `userName`
+- `withdrawData`
+- auto-expiring temporary record used during withdrawals
 
-### Betting Data
-```javascript
-{
-    playersId: [ObjectId],      // Two players
-    bettingAmount: Number,
-    status: String,             // 'pending', 'completed'
-    winner: ObjectId,
-    createdAt: Date
-}
-```
+## Blockchain Behavior
 
-### Transaction Data
-```javascript
-{
-    from: String,               // Sender public key
-    to: String,                 // Receiver public key
-    amount: Number,
-    bettingId: ObjectId,
-    transactionHash: String,
-    status: String,             // 'pending', 'confirmed'
-    timestamp: Date
-}
-```
+- The token mint comes from `config.memeCoinInfo.mintAddress`.
+- The fee payer key comes from `config.PayerPrivateKey`.
+- The fee wallet comes from `config.cutOffPublicKey`.
+- The fee percentage comes from `config.platformFee`.
+- The current helper code uses the configured `RPC_NETWORK` value, with devnet fallback.
 
----
+## Known Limitations
 
-## 🎯 Key Features in Detail
+- Only one game is implemented.
+- Wallet private keys are stored directly in MongoDB in the current implementation.
+- The game backend settlement callback is still hardcoded to `http://localhost:5100`.
+- Some text in the bot assumes a specific fee breakdown even though only the total percentage is configurable.
 
-### Real-time Multiplayer
-- **Socket.io** connects players in real-time
-- Game state synchronized across clients
-- Live player status updates
+## Troubleshooting
 
-### Betting Logic
-- Players can bet between min-max amounts
-- Bets are locked until game starts
-- Winner receives bet amount minus platform fee
-- Loser amount is automatically debited
+### Bot does not respond
 
-### Security Features
-- ✅ Private keys stored securely in database
-- ✅ SPL token verification before transactions
-- ✅ Public key validation
-- ✅ Error handling for failed transactions
+- Verify `BOT_TOKEN_DEV` or `BOT_TOKEN_PROD` in the root `.env`.
+- Make sure the main backend is running.
+- Confirm MongoDB is reachable.
 
----
+### Wallet or token validation fails
 
-## 📝 API Endpoints
+- Verify the configured token mint matches the network used by the RPC endpoint.
+- Confirm the wallet has or can create an associated token account.
+- Check `RPC_NETWORK`.
 
-### Main Backend (Port 5100)
+### Settlement fails
 
-**POST** `/savewinnertransaction`
-- Records winner and transfers crypto
-- Body: `{ winnerId, bettingId }`
-- Handles automatic fund transfer via Solana
+- Make sure the main backend is reachable on port `5100`.
+- Verify the payer wallet has enough SOL for transaction fees.
+- Verify both players have valid token accounts.
 
-### Game Backend (Port 5010)
+### Frontend cannot connect to the game backend
 
-**API Routes** (in `/utils/routes/`)
-- Socket.io handlers for real-time game state
-- Player connection/disconnection logic
-- Game choice submission and validation
+- Check `VITE_GAME_SERVER_URL` in `game/.env.local`.
+- Check `GAME_CLIENT_URL` and `GAME_BACKEND_PORT` in `game_backend/rps/.env`.
 
----
+## Deployment Notes
 
-## 🔧 Commands Reference
+For deployment you need to provide production values in the environment files and set `DEV_MODE=false`.
 
-| Command | Description |
-|---------|-------------|
-| `/start` | Initialize bot, create Solana wallet |
-| `/wallet` | Link/verify wallet with token |
-| `/play` | Browse and select games |
-| `/help` | Show available commands |
+At minimum, review:
 
----
+- bot credentials,
+- MongoDB production URL,
+- production token mint and token name,
+- production payer private key,
+- production platform wallet,
+- production frontend and backend URLs,
+- the hardcoded settlement URL in the RPS backend.
 
-## 🐛 Troubleshooting
-
-### Bot not responding
-- Check bot token in `config.js`
-- Ensure main backend is running (`npm start`)
-- Check MongoDB connection
-
-### Wallet verification fails
-- Verify wallet has token account created
-- Check if mint address is correct in config
-- Ensure Solana devnet/mainnet is accessible
-
-### Transaction fails
-- Check payer wallet has sufficient SOL for fees
-- Verify receiver wallet exists
-- Check network connectivity to RPC endpoint
-
----
-
-## 📊 Development vs Production
-
-### Development Mode (`devModeOn = true`)
-- Uses Solana **Devnet**
-- USDC-DEV token
-- Local MongoDB
-- Test bot token
-
-### Production Mode
-- Uses Solana **Mainnet**
-- NOMO token
-- Cloud MongoDB
-- Live bot token
-
-Toggle in `config.js` by changing `devModeOn` constant.
-
----
-
-## 🚀 Deployment
-
-### Prerequisites
-- Node.js hosting (e.g., Heroku, DigitalOcean, AWS)
-- MongoDB Atlas (cloud database)
-- Solana Mainnet RPC endpoint
-- Telegram bot token (production)
-
-### Steps
-1. Update `config.js` with production values
-2. Deploy backend to hosting
-3. Deploy frontend to static hosting (Vercel, Netlify)
-4. Update deep link URLs in bot commands
-5. Monitor logs and transactions
-
----
-
-## 📄 License
+## License
 
 ISC
-
----
-
-## 👥 Author
-
-Developed for Nomo Gambling Platform
-
----
-
-## 📞 Support
-
-For issues or questions:
-- Check MongoDB connection
-- Verify Solana RPC endpoint
-- Ensure all environment variables are set
-- Check bot token validity
-
----
-
-## Deep Links Reference
-
-Format: `https://t.me/BOT_NAME?start=KEY-VALUE_KEY-VALUE_type-TYPE`
-
-**Parameters:**
-- `bettingId` - ID of the bet
-- `chat` - Chat/User ID
-- `type` - Request type (joinbet, creategame, playgame)
-
-**Example:**
-```
-https://t.me/This_is_Test400_bot?start=bettingId-12345_chat-36356_type-joinbet
-```
-
-
-
-
-
-
-<type> filed is important for all deep link requests.
