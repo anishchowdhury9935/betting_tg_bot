@@ -4,7 +4,7 @@ const bs58 = require('bs58');
 const solanaWeb3 = require('@solana/web3.js');
 const config = require('../../config');
 const { TryCatch } = require('./helperMain');
-const connection = new solanaWeb3.Connection(config.rpcNetwork || solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+const connection = new solanaWeb3.Connection(config.devMode ?  solanaWeb3.clusterApiUrl('devnet') : config.rpcNetwork, 'confirmed');
 const mintAddress = config.memeCoinInfo.mintAddress;
 
 function getKeyPairWithPrivateKey(PrivateKey) {
@@ -47,7 +47,6 @@ const helperWeb3MainObj = {
     /** returns the original wallet token balance object from solana blockchain.*/
     getUserMemeCoinBalanceObj: async (walletAddressObj = {}) => { 
         try {
-            // const connection = new solanaWeb3.Connection('https://go.getblock.io/f21d0b90f953476baef61d71f5dce283', 'confirmed');
             const { publicKey } = walletAddressObj;
             const mintAddress = config.memeCoinInfo.mintAddress;
             const mintPublicKey = new PublicKey(mintAddress);
