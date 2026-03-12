@@ -33,6 +33,10 @@ function botMsgHandler(bot) {
             '/games - Shows available games ',
             '/wallet - Shows wallet info',
             `/withdraw - use to withdraw ${config.memeCoinInfo.name}`,
+            '/mybettings - Shows your betting history ',
+            '/leaderboard - Shows top players ',
+            '/stats - Shows your game statistics ',
+            '/create - Create your wallet', 
         ]
         let replyTxt = 'Here is available commands 🤖:\n\n'
         availableCommands.map((command) =>{

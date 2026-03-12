@@ -47,7 +47,7 @@ try {
             const betAmount = findBet.bettingAmount;
             const winnerWalletPublicKey = findWinner.walletAddress.publicKey;
             const loserWalletPrivateKey = findLoser.walletAddress.privateKey;
-            const cutOffAmount = calculatePercentage(2, betAmount);
+            const cutOffAmount = calculatePercentage(config.platformFee, betAmount);
             const amountToSentInWinnerWallet = betAmount - cutOffAmount;
             const transferMemeCoinToWinner = await transferMemeCoin(loserWalletPrivateKey, winnerWalletPublicKey, amountToSentInWinnerWallet);
             const transferMemeCoinOfCutOff = await transferMemeCoin(loserWalletPrivateKey, config.cutOffPublicKey, cutOffAmount);

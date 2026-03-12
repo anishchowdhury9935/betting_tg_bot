@@ -4,8 +4,8 @@ const bs58 = require('bs58');
 const solanaWeb3 = require('@solana/web3.js');
 const config = require('../../config');
 const { TryCatch } = require('./helperMain');
-// const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
-const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
+const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+// const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
 const mintAddress = config.memeCoinInfo.mintAddress;
 
 function getKeyPairWithPrivateKey(PrivateKey) {
@@ -46,9 +46,9 @@ const helperWeb3MainObj = {
 
 
     /** returns the original wallet token balance object from solana blockchain.*/
-    getUserMemeCoinBalanceObj: async (walletAddressObj = {}) => {
+    getUserMemeCoinBalanceObj: async (walletAddressObj = {}) => { 
         try {
-            const connection = new solanaWeb3.Connection('https://go.getblock.io/f21d0b90f953476baef61d71f5dce283', 'confirmed');
+            // const connection = new solanaWeb3.Connection('https://go.getblock.io/f21d0b90f953476baef61d71f5dce283', 'confirmed');
             const { publicKey } = walletAddressObj;
             const mintAddress = config.memeCoinInfo.mintAddress;
             const mintPublicKey = new PublicKey(mintAddress);
@@ -87,7 +87,7 @@ const helperWeb3MainObj = {
     /** Transfer tokens from one wallet to another. */
     transferMemeCoin: async (_fromWalletPrivateKey, _toWalletPublicKey, amount, _feePayerPrivatekey = config.PayerPrivateKey) => {
         try {
-            const connectionFast = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-FkplVBNzBHxexjaAnPajqTAvRuZZWq0o', 'confirmed');
+            // const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-FkplVBNzBHxexjaAnPajqTAvRuZZWq0o', 'confirmed');
             // Create a new Token object
             // Get the associated token accounts for the sender and recipient
             const fromWallet = getKeyPairWithPrivateKey(_fromWalletPrivateKey);
@@ -108,7 +108,7 @@ const helperWeb3MainObj = {
                 toWallet
             );
             const tokenAccount = await getAssociatedTokenAddress(mintAddress, new PublicKey(_toWalletPublicKey));
-            const tokenBalance = await connectionFast.getTokenAccountBalance(tokenAccount);
+            const tokenBalance = await connection.getTokenAccountBalance(tokenAccount);
             // Create the transfer transaction
             const transaction = new Transaction().add(
                 createTransferInstruction(
@@ -121,10 +121,10 @@ const helperWeb3MainObj = {
                 )
             );
             transaction.feePayer = feePayer.publicKey;
-            const connectionForHash = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
-            const { blockhash, lastValidBlockHeight } = await connectionForHash.getLatestBlockhash();
+            // const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
+            const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
             transaction.recentBlockhash = blockhash;
-            const signature = await sendAndConfirmTransaction(connectionFast, transaction, [fromWallet, feePayer], {
+            const signature = await sendAndConfirmTransaction(connection, transaction, [fromWallet, feePayer], {
                 commitment: 'finalized',
                 preflightCommitment: 'finalized'
             });

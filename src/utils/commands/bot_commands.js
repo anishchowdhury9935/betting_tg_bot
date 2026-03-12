@@ -187,7 +187,6 @@ const index = {
             bot.sendMessage(chatId, replyTxt, { reply_to_message_id: replyToMessageId });
         })
     },
-
 }
 module.exports = index;
 

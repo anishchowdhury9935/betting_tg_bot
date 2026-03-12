@@ -1,38 +1,37 @@
-const devModeOn = false;
+require('dotenv').config();
+
+const devMode = process.env.DEV_MODE === 'true';
+
 const config = {
+    devMode,
     botInfo: {
-        botToken: "7677063351:AAFAvug-SNT8FSyb3zzmh0uZDVrSaTntmdc",//**
-        botTgUserName: 'nomoGamblebot',
-        botName: "Nomo Game bot",//**
+        botToken: devMode ? process.env.BOT_TOKEN_DEV : process.env.BOT_TOKEN_PROD,
+        botTgUserName: devMode ? process.env.BOT_USERNAME_DEV : process.env.BOT_USERNAME_PROD,
+        botName: process.env.BOT_NAME,
     },
     db: {
-        // In development phase use 'mongoHostUrlDev' (you should have mongodb installed in your machine) in production phase use 'mongoHostUrlMain'
-        mongoHostUrlDev: devModeOn ? "mongodb://127.0.0.1:27017/tg_betting_bot" : false,
-        mongoHostUrlMain: devModeOn ? false : "mongodb+srv://nomoonsolana:nomosol9935@cluster0.itrhg7m.mongodb.net/tg_betting_bot",//**
+        mongoHostUrlDev: process.env.MONGO_URL_DEV,
+        mongoHostUrlMain: process.env.MONGO_URL_PROD,
     },
     memeCoinInfo: {
-        // mintAddress: 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
-        mintAddress: devModeOn ? '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU' : 'J3EEg43NaHQmPCNxhPjFZhsjwa6FJxaBA3pudQFyf4Jq',//**
-        name: devModeOn ? 'USDC' : 'NOMO',//**
-
-    }, bettingInfo: {
+        mintAddress: devMode ? process.env.MINT_ADDRESS_DEV : process.env.MINT_ADDRESS_PROD,
+        name: devMode ? process.env.MEME_COIN_NAME_DEV : process.env.MEME_COIN_NAME_PROD,
+    },
+    bettingInfo: {
         bettingAmount: {
-            min: 10,
-            max: 1000
+            min: Number.parseInt(process.env.MIN_BET_AMOUNT) || 10,
+            max: Number.parseInt(process.env.MAX_BET_AMOUNT) || 1000,
         }
     },
-    // rpcNetwork: 'https://solana-api.instantnodes.io/token-FkplVBNzBHxexjaAnPajqTAvRuZZWq0o',
-    rpcNetwork: 'https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca',
-    PayerPrivateKey: devModeOn ? '5xuGQCytpr8uuNjc8Z46RUxKfDXomh2PMR6z7wnpJ5RTXvoLPUXwN88hEMdbVg1yf3pn5QQJjukKqmjyzLgPY3u' : '2CQzLyTedm7A2HA22KggCx9mVDdcA85wqrdW4U9DKckHX6asD6fwVrPSRRsmEHRCnJTEf1bmkitm3UR1JbeU28UZ',
-    cutOffPublicKey: devModeOn ? 'HPKFp6tWjCMmoH6AR52KJUmECgmRxrtyW9Fy8u7yUJcC' : 'FQhCS9PkKgnTg6hyztCyZCkkeFmYP2G2EexokB7SPPJu',
-    // PayerPrivateKey: '2CQzLyTedm7A2HA22KggCx9mVDdcA85wqrdW4U9DKckHX6asD6fwVrPSRRsmEHRCnJTEf1bmkitm3UR1JbeU28UZ',
+    rpcNetwork: process.env.RPC_NETWORK,
+    PayerPrivateKey: devMode ? process.env.PAYER_PRIVATE_KEY_DEV : process.env.PAYER_PRIVATE_KEY_PROD,
+    cutOffPublicKey: devMode ? process.env.CUT_OFF_PUBLIC_KEY_DEV : process.env.CUT_OFF_PUBLIC_KEY_PROD,
+    platformFee: Number.parseInt(process.env.PLATFORM_FEE) || 2,
     urls: {
-        // gameClientBaseUrl: 'https://tg-betting-bot-client.nomoonsol.com',
-        gameClientBaseUrl: devModeOn ? 'https://b05e-2405-201-4016-285d-e0fd-bd1d-649f-2655.ngrok-free.app' : "https://tg-betting-bot-client.nomoonsol.com",
-        // gameServerBaseUrl: 'https://nomoonsol.com/',
-        gameServerBaseUrl: devModeOn ? 'http://localhost:5010' : "https://nomoonsol.com/",
-    }
-    , port: 5100
-}
+        gameClientBaseUrl: process.env.GAME_CLIENT_URL,
+        gameServerBaseUrl: process.env.GAME_SERVER_URL,
+    },
+    port: Number.parseInt(process.env.MAIN_BACKEND_PORT) || 5100,
+};
 
 module.exports = config;

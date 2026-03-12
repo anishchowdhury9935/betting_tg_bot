@@ -5,8 +5,8 @@ const solanaWeb3 = require('@solana/web3.js');
 const userBettingData = require("../db/models/userBettingData");
 const userDetails = require("../db/models/userDetails");
 const { getUserMemeCoinBalanceObj } = require("./helperWeb3");
-const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
-// const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+// const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
+const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
 
 
 /**
@@ -15,7 +15,7 @@ const connection = new solanaWeb3.Connection(config.rpcNetwork, 'confirmed');
 * @returns {boolean} - Returns true if the wallet has a token account for the mint, otherwise false.
 */
 async function hasTokenAccountForMint(walletAddress) {
-    const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
+    // const connection = new solanaWeb3.Connection('https://solana-api.instantnodes.io/token-Kd8tc0HfwPYeraHzTi9t1r4VQmK7Mnca', 'confirmed');
     try {
         // Convert the wallet and mint addresses to PublicKey objects
         const ownerPublicKey = new PublicKey(walletAddress);
