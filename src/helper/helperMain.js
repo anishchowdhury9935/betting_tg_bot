@@ -5,7 +5,7 @@ const solanaWeb3 = require('@solana/web3.js');
 const userBettingData = require("../db/models/userBettingData");
 const userDetails = require("../db/models/userDetails");
 const { getUserMemeCoinBalanceObj } = require("./helperWeb3");
-const connection = new solanaWeb3.Connection(config.rpcNetwork || solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+const connection = new solanaWeb3.Connection(config.devMode ?  solanaWeb3.clusterApiUrl('devnet') : config.rpcNetwork, 'confirmed');
 
 
 /**
